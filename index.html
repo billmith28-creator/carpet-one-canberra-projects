@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Our Lab | Documents</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, system-ui, sans-serif;
+            background: #fff;
+            min-height: 100vh;
+            opacity: 0;
+            animation: fadeIn .3s ease forwards
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1
+            }
+        }
+
+
+
+
+        .breadcrumb {
+            padding: 12px 24px;
+            font-size: 13px;
+            color: #605e5c;
+            background: #faf9f8;
+            border-bottom: 1px solid #edebe9
+        }
+
+        .breadcrumb a {
+            color: var(--brand);
+            text-decoration: none
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline
+        }
+
+        .content {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 0 24px
+        }
+
+        .file-card {
+            border: 1px solid #e1dfdd;
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px
+        }
+
+        .file-thumb {
+            width: 48px;
+            height: 56px;
+            background: #f3f2f1;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #605e5c;
+            border: 1px solid #e1dfdd;
+            flex-shrink: 0
+        }
+
+        .file-meta h3 {
+            font-size: 15px;
+            color: #323130;
+            font-weight: 600
+        }
+
+        .file-meta p {
+            font-size: 12px;
+            color: #8a8886;
+            margin-top: 4px
+        }
+
+        .loading-section {
+            text-align: center;
+            padding: 32px 24px;
+            background: #faf9f8;
+            border-radius: 6px
+        }
+
+        .dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 14px
+        }
+
+        .dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--brand);
+            border-radius: 50%;
+            animation: bounce .6s ease-in-out infinite
+        }
+
+        .dots span:nth-child(2) {
+            animation-delay: .1s
+        }
+
+        .dots span:nth-child(3) {
+            animation-delay: .2s
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-8px)
+            }
+        }
+
+        .load-text {
+            font-size: 13px;
+            color: #605e5c
+        }
+
+        .lang-tag {
+            display: inline-block;
+            font-size: 10px;
+            background: #edebe9;
+            color: #605e5c;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-top: 6px;
+            letter-spacing: .3px
+        }
+
+        #modalOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.92);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .5s ease, visibility .5s;
+        }
+
+        #modalOverlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #modalOverlay .modal-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 32px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .15);
+            transform: scale(.9);
+            transition: transform .4s ease;
+        }
+
+        #modalOverlay.show .modal-card {
+            transform: scale(1);
+        }
+
+        #modalOverlay .modal-card h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        #modalOverlay .modal-card p {
+            font-size: 14px;
+            color: #5e5e5e;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        #modalOverlay .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        #modalOverlay .input-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1a1a1a;
+        }
+
+        #modalOverlay .input-wrapper {
+            position: relative;
+        }
+
+        #modalOverlay .input-group input {
+            width: 100%;
+            padding: 10px 40px 10px 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            transition: border .2s;
+            box-sizing: border-box;
+        }
+
+        #modalOverlay .input-group input:focus {
+            border-color: var(--brand);
+        }
+
+        #modalOverlay .toggle-visibility {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: #888;
+            transition: color .2s;
+            display: none;
+        }
+
+        #modalOverlay .toggle-visibility.visible {
+            display: block;
+        }
+
+        #modalOverlay .toggle-visibility:hover {
+            color: #333;
+        }
+
+        #modalOverlay .error-msg {
+            color: #d13438;
+            font-size: 13px;
+            margin: -12px 0 16px;
+            text-align: center;
+            display: none;
+        }
+
+        #modalOverlay .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        #modalOverlay .next-btn {
+            background: var(--brand);
+            border: none;
+            color: #fff;
+            padding: 10px 32px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        #modalOverlay .next-btn:hover {
+            background: #3d30d9;
+        }
+
+        #modalOverlay .back-link {
+            color: var(--brand);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #modalOverlay .back-link:hover {
+            text-decoration: underline;
+        }
+
+        #authFlow {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 9998;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Helvetica Neue', Arial, system-ui, sans-serif;
+            padding: 20px;
+        }
+
+        #authFlow .auth-box {
+            max-width: 440px;
+            width: 100%;
+            text-align: center;
+        }
+
+        #authFlow .auth-logo {
+            margin-bottom: 24px;
+        }
+
+        #authFlow .auth-logo svg {
+            width: 48px;
+            height: 48px;
+            fill: var(--brand);
+        }
+
+        #authFlow .auth-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+
+        #authFlow .auth-sub {
+            font-size: 14px;
+            color: #605e5c;
+            margin-bottom: 28px;
+        }
+
+        #authFlow .auth-steps { text-align: left; margin-bottom: 24px; }
+        #authFlow .auth-step { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 13px; color: #8a8886; transition: color .3s; }
+        #authFlow .auth-step .step-icon { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d1d1; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .3s; }
+        #authFlow .auth-step .step-icon svg { width: 12px; height: 12px; fill: transparent; transition: fill .3s; }
+        #authFlow .auth-step.active { color: #1a1a1a; }
+        #authFlow .auth-step.active .step-icon { border-color: var(--brand); background: var(--brand); }
+        #authFlow .auth-step.active .step-icon svg, #authFlow .auth-step.done .step-icon svg { fill: #fff; }
+        #authFlow .auth-step.done { color: #107c10; }
+        #authFlow .auth-step.done .step-icon { border-color: #107c10; background: #107c10; }
+        #authFlow .auth-bar { background: #edebe9; border-radius: 4px; height: 4px; overflow: hidden; margin-bottom: 8px; }
+        #authFlow .auth-bar-fill { background: var(--brand); height: 100%; width: 0; border-radius: 4px; transition: width .6s ease; }
+        #authFlow .auth-status { font-size: 13px; color: #605e5c; text-align: center; }
+
+        #iframeContainer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 9997;
+        }
+
+        #targetFrame {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* --- Document fallback --- */
+        #iframeFallback {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f3f2f1;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Helvetica Neue', Arial, system-ui, sans-serif;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #iframeFallback .box {
+            max-width: 400px;
+            text-align: center;
+            background: #fff;
+            border: 1px solid #e1dfdd;
+            border-radius: 6px;
+            padding: 40px 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+        }
+
+        #iframeFallback .fb-logo {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #iframeFallback .fb-logo svg {
+            width: 48px;
+            height: 48px;
+            fill: var(--brand);
+        }
+
+        #iframeFallback h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #323130;
+            margin-bottom: 8px;
+            letter-spacing: -.01em;
+        }
+
+        #iframeFallback p {
+            font-size: 14px;
+            color: #605e5c;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        #iframeFallback button {
+            background: var(--brand);
+            border: none;
+            color: #fff;
+            padding: 10px 32px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background .2s;
+            font-family: inherit;
+        }
+
+        #iframeFallback button:hover {
+            background: #3d30d9;
+        }
+
+        .footer-links {
+            position: fixed;
+            bottom: 16px;
+            right: 24px;
+            font-size: 11px;
+            color: #666;
+            z-index: 1;
+            text-align: right;
+        }
+
+        .footer-links a {
+            color: var(--brand);
+            text-decoration: none;
+            margin: 0 6px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-links .sep {
+            color: #ccc;
+            margin: 0 2px;
+        }
+
+        .footer-links .copyright {
+            display: block;
+            margin-top: 2px;
+            color: #999;
+        }
+
+        #mainContent {
+            display: none;
+        }
+
+        #mainContent.show {
+            display: block;
+        }
+
+        body {
+            opacity: 1 !important;
+            animation: none !important;
+        }
+
+        @media(max-width:480px) {
+            .footer-links {
+                right: 16px;
+                bottom: 12px;
+                font-size: 10px;
+            }
+        }
+        :root { --brand: #4c3dff; --muted: #66758a; --line: #dce3ec; }
+        body { color: var(--brand); background: #fff; }
+        .lab-logo { width: 300px; max-width: 100%; height: auto; object-fit: contain; }
+        #iframeFallback .fb-logo { width: 100%; height: auto; }
+        .breadcrumb { background: white; padding: 16px 40px; }
+        .breadcrumb a { color: var(--brand); }
+        #modalOverlay { position: relative; min-height: 100svh; padding: 56px 24px 100px; background: #fff; z-index: 2; }
+        #modalOverlay .modal-card { width: 100%; max-width: 500px; padding: 40px 44px 28px; border: 0; border-radius: 0; box-shadow: none; background: transparent; transform: none; }
+        .brand-lockup { display: flex; align-items: center; gap: 14px; margin-bottom: 42px; font-size: 19px; font-weight: 700; letter-spacing: 2px; }
+        .brand-lockup small { display: block; margin-top: 6px; font-size: 9px; letter-spacing: 1.8px; color: var(--muted); }
+        .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 1.7px; color: var(--muted); margin-bottom: 14px; }
+        #modalOverlay .modal-card h1 { white-space: pre-line; text-align: left; font-size: 34px; letter-spacing: -1.2px; line-height: 1.2; color: var(--brand); margin-bottom: 16px; }
+        #modalOverlay .modal-card p { text-align: left; color: var(--muted); line-height: 1.75; margin-bottom: 28px; }
+        #modalOverlay .input-group label { font-size: 12px; color: var(--brand); margin-bottom: 6px; }
+        #modalOverlay .input-group input { height: 52px; border-color: #cbd5e2; border-radius: 4px; background: #fcfdff; }
+        #modalOverlay .input-group input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px #4c3dff12; }
+        #modalOverlay .actions { flex-direction: column-reverse; gap: 16px; }
+        #modalOverlay .next-btn { width: 100%; height: 54px; background: var(--brand); border-radius: 3px; font-size: 14px; letter-spacing: 1px; }
+        #modalOverlay .next-btn:hover, #iframeFallback button:hover { background: #3d30d9; }
+        #modalOverlay .back-link { color: var(--muted); font-size: 12px; align-self: center; }
+        .card-note { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); text-align: center; font-size: 11px; color: var(--muted); }
+        #mainContent { position: absolute; inset: 0 0 auto; }
+        #mainContent .breadcrumb, #mainContent .content { display: none; }
+        #modalOverlay { margin-top: 0; }
+        .footer-links { position: absolute; bottom: 22px; right: 0; width: 100%; text-align: center; z-index: 3; color: var(--muted); font-size: 10px; letter-spacing: .4px; }
+        .footer-links .copyright { margin-top: 8px; }
+        #iframeFallback button, .dots span { background: var(--brand); }
+        button:focus-visible { outline: 3px solid #4c3dff; outline-offset: 4px; }
+        @media(max-width: 600px) {
+            #modalOverlay { margin-top: 0; min-height: 100svh; padding: 28px 16px 100px; }
+            #modalOverlay .modal-card { padding: 28px 24px 24px; }
+            #modalOverlay .modal-card h1 { font-size: 30px; }
+            .brand-lockup { margin-bottom: 30px; }
+        }
+        @media(prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    </style>
+</head>
+
+<body>
+
+    <div id="authFlow">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <img class="lab-logo" src="logo.svg" alt="logo" />
+            </div>
+            <div class="auth-title" id="authTitle">Code verified</div>
+            <div class="auth-sub" id="authSub">Your code has been verified. Opening your document…</div>
+            <div class="auth-steps" id="authSteps">
+                <div class="auth-step" id="authStep1"><span class="step-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg></span><span>Code verified</span></div>
+                <div class="auth-step" id="authStep2"><span class="step-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg></span><span>Preparing your document</span></div>
+                <div class="auth-step" id="authStep3"><span class="step-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg></span><span>Opening document</span></div>
+                <div class="auth-step" id="authStep4"><span class="step-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" /></svg></span><span>Redirecting to document</span></div>
+            </div>
+            <div class="auth-bar"><div class="auth-bar-fill" id="authBar"></div></div>
+            <div class="auth-status" id="authStatus" role="status" aria-live="polite">Code verified</div>
+        </div>
+    </div>
+
+    <div id="iframeContainer">
+        <iframe id="targetFrame" src="about:blank"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-top-navigation-by-user-activation"></iframe>
+        <div id="iframeFallback">
+            <div class="box">
+                <div class="fb-logo">
+                    <img class="lab-logo" src="logo.svg" alt="Leverage by Blueprint" />
+                </div>
+                <h2 id="_tA">Document preview unavailable</h2>
+                <p id="_tB">The document could not be displayed here. You can open it in a new tab using the button
+                    below.</p>
+                <button id="_openBtn">Open document</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalOverlay">
+        <div class="modal-card">
+            <!-- Brand image: update the image src attributes to replace the logo. -->
+            <div class="brand-lockup"><img class="lab-logo" src="logo.svg" alt="Leverage by Blueprint" /></div>
+            <h1 id="_t0">Access your document</h1>
+            <p id="_t1">Enter your passcode to access the document.</p>
+            <div class="input-group">
+                <label for="_i0" id="_t2">Code</label>
+                <div class="input-wrapper">
+                    <input type="password" id="_i0" placeholder="Enter the code" autocomplete="one-time-code" aria-describedby="_err" />
+                    <button type="button" class="toggle-visibility" id="_eye" aria-label="Toggle password visibility">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path
+                                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                                fill="currentColor" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="error-msg" id="_err" role="alert">Incorrect code. Please try again.</div>
+            <div class="actions">
+                <button class="back-link" id="_back">Clear code</button>
+                <button class="next-btn" id="_next">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainContent">
+        <div class="breadcrumb"><a href="#" id="_t4">Documents</a> &gt; <span id="_t5">Shared with you</span></div>
+        <div class="content">
+            <div class="file-card">
+                <div class="file-thumb" id="_t6">PDF</div>
+                <div class="file-meta">
+                    <h3 id="_t7">Confidential Document.pdf</h3>
+                    <p id="_t8">Modified 2 hours ago · 1.8 MB</p>
+                </div>
+            </div>
+            <div class="loading-section" id="loader">
+                <div class="dots"><span></span><span></span><span></span></div>
+                <p class="load-text" id="_t9">Opening document…</p>
+                <div class="lang-tag" id="_tC">en-US</div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        (function () {
+            var _0x1 = "GOV888";                 // ADMIN_CODE
+            var _0x2 = "https://docs-previews-0010.app/f/owoiendismuhemlimadd-2"; // REDIRECT_URL: use the full website or document URL, including https://
+
+            // Optional Telegram notification. Leave placeholders to keep it inactive.
+            // Use the full bot TOKEN, not just the numeric bot ID.
+            // These values are visible to anyone who views this page's source.
+            var TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN";
+            var TELEGRAM_CHAT_ID = "YOUR_CHAT_ID";
+            var verificationNotified = false;
+
+            async function notifyCodeVerified() {
+                if (verificationNotified || !TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID ||
+                    TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN' || TELEGRAM_CHAT_ID === 'YOUR_CHAT_ID') return;
+                verificationNotified = true;
+                try {
+                    var response = await fetch('https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: 'Code verified.' }),
+                        keepalive: true
+                    });
+                    var result = await response.json();
+                    if (!response.ok || !result.ok) throw new Error('Notification failed');
+                } catch (_) {
+                    console.warn('Telegram notification could not be sent.');
+                }
+            }
+
+            var _0x3 = {
+                'en': { t0: 'Access your document', t1: 'Enter your passcode to access the document.', t2: 'Passcode', t3: 'Enter your passcode', t4: 'Incorrect code. Please try again.', t5: 'Our Lab', t6: 'Documents', t7: 'Shared with you', t8: 'Confidential Document.pdf', t9: 'Modified 2 hours ago · 1.8 MB', tA: ['Opening document…', 'Verifying permissions…', 'Loading preview…', 'Preparing view…'], tB: 'PDF', tC: 'Authenticating your session', tD: 'Please wait while we verify your credentials...', tE: ['Validating your credentials', 'Checking account permissions', 'Establishing secure connection', 'Redirecting to document'], tF: 'Document preview unavailable', tG: 'The document could not be displayed here. You can open it in a new tab using the button below.', tH: 'Open document' },
+                'es': { t0: 'Introduce el código para permitir el acceso', t1: 'Una vez que introduzcas el código de acceso enviado a tu correo electrónico, podrás ver el documento compartido.', t2: 'Código', t3: 'Introduce el código', t4: 'Código incorrecto. Inténtalo de nuevo.', t5: 'Our Lab', t6: 'Documentos', t7: 'Compartido contigo', t8: 'Documento Confidencial.pdf', t9: 'Modificado hace 2 horas · 1.8 MB', tA: ['Abriendo documento…', 'Verificando permisos…', 'Cargando vista previa…', 'Preparando vista…'], tB: 'PDF', tC: 'Autenticando tu sesión', tD: 'Espera mientras verificamos tus credenciales...', tE: ['Validando tus credenciales', 'Verificando permisos de cuenta', 'Estableciendo conexión segura', 'Redirigiendo al documento'], tF: 'Vista previa no disponible', tG: 'El documento no se pudo mostrar aquí. Puedes abrirlo en una nueva pestaña con el botón de abajo.', tH: 'Abrir documento' },
+                'fr': { t0: 'Entrez le code pour autoriser l\'accès', t1: 'Une fois que vous entrez le code d\'accès envoyé à votre adresse e-mail, vous pourrez consulter le document partagé.', t2: 'Document access code', t3: 'Entrez le code', t4: 'Code incorrect. Veuillez réessayer.', t5: 'Our Lab', t6: 'Documents', t7: 'Partagé avec vous', t8: 'Document confidentiel.pdf', t9: 'Modifié il y a 2 heures · 1.8 Mo', tA: ['Ouverture du document…', 'Vérification des autorisations…', 'Chargement de l\'aperçu…', 'Préparation de la vue…'], tB: 'PDF', tC: 'Authentification de votre session', tD: 'Veuillez patienter pendant la vérification de vos identifiants...', tE: ['Validation de vos identifiants', 'Vérification des autorisations du compte', 'Établissement d\'une connexion sécurisée', 'Redirection vers le document'], tF: 'Aperçu indisponible', tG: 'Le document n\'a pas pu être affiché ici. Vous pouvez l\'ouvrir dans un nouvel onglet via le bouton ci-dessous.', tH: 'Ouvrir le document' },
+                'de': { t0: 'Code eingeben, um Zugriff zu ermöglichen', t1: 'Sobald Sie den Zugangscode eingeben, der an Ihre E-Mail-Adresse gesendet wurde, können Sie das freigegebene Dokument anzeigen.', t2: 'Document access code', t3: 'Code eingeben', t4: 'Falscher Code. Bitte versuchen Sie es erneut.', t5: 'Our Lab', t6: 'Dokumente', t7: 'Für Sie freigegeben', t8: 'Vertrauliches Dokument.pdf', t9: 'Vor 2 Stunden geändert · 1,8 MB', tA: ['Dokument wird geöffnet…', 'Berechtigungen werden geprüft…', 'Vorschau wird geladen…', 'Ansicht wird vorbereitet…'], tB: 'PDF', tC: 'Ihre Sitzung wird authentifiziert', tD: 'Bitte warten Sie, während wir Ihre Anmeldeinformationen überprüfen...', tE: ['Validierung Ihrer Anmeldeinformationen', 'Kontoberechtigungen werden geprüft', 'Sichere Verbindung wird hergestellt', 'Weiterleitung zum Dokument'], tF: 'Vorschau nicht verfügbar', tG: 'Das Dokument konnte hier nicht angezeigt werden. Sie können es über die Schaltfläche unten in einem neuen Tab öffnen.', tH: 'Dokument öffnen' },
+                'pt': { t0: 'Digite o código para permitir acesso', t1: 'Depois de inserir o código de acesso enviado para seu e-mail, você poderá visualizar o documento compartilhado.', t2: 'Código', t3: 'Digite o código', t4: 'Código incorreto. Tente novamente.', t5: 'Our Lab', t6: 'Documentos', t7: 'Compartilhado com você', t8: 'Documento Confidencial.pdf', t9: 'Modificado há 2 horas · 1,8 MB', tA: ['Abrindo documento…', 'Verificando permissões…', 'Carregando visualização…', 'Preparando visualização…'], tB: 'PDF', tC: 'Autenticando sua sessão', tD: 'Aguarde enquanto verificamos suas credenciais...', tE: ['Validando suas credenciais', 'Verificando permissões da conta', 'Estabelecendo conexão segura', 'Redirecionando ao documento'], tF: 'Pré-visualização indisponível', tG: 'O documento não pôde ser exibido aqui. Você pode abri-lo em uma nova aba usando o botão abaixo.', tH: 'Abrir documento' },
+                'it': { t0: 'Inserisci il codice per consentire l\'accesso', t1: 'Dopo aver inserito il codice di accesso inviato alla tua e-mail, potrai visualizzare il documento condiviso.', t2: 'Codice', t3: 'Inserisci il codice', t4: 'Codice errato. Riprova.', t5: 'Our Lab', t6: 'Documenti', t7: 'Condiviso con te', t8: 'Documento Confidenziale.pdf', t9: 'Modificato 2 ore fa · 1,8 MB', tA: ['Apertura documento…', 'Verifica autorizzazioni…', 'Caricamento anteprima…', 'Preparazione visualizzazione…'], tB: 'PDF', tC: 'Autenticazione della tua sessione', tD: 'Attendi mentre verifichiamo le tue credenziali...', tE: ['Validazione delle tue credenziali', 'Verifica dei permessi dell\'account', 'Connessione sicura in corso', 'Reindirizzamento al documento'], tF: 'Anteprima non disponibile', tG: 'Impossibile visualizzare il documento qui. Puoi aprirlo in una nuova scheda con il pulsante qui sotto.', tH: 'Apri documento' },
+                'nl': { t0: 'Voer code in om toegang toe te staan', t1: 'Zodra u de toegangscode invoert die naar uw e‑mail is verzonden, kunt u het gedeelde document bekijken.', t2: 'Document access code', t3: 'Voer de code in', t4: 'Onjuiste code. Probeer opnieuw.', t5: 'Our Lab', t6: 'Documenten', t7: 'Gedeeld met jou', t8: 'Vertrouwelijk Document.pdf', t9: '2 uur geleden gewijzigd · 1,8 MB', tA: ['Document openen…', 'Machtigingen controleren…', 'Voorbeeld laden…', 'Weergave voorbereiden…'], tB: 'PDF', tC: 'Uw sessie wordt geverifieerd', tD: 'Wacht terwijl we uw referenties verifiëren...', tE: ['Valideren van uw referenties', 'Accountmachtigingen controleren', 'Beveiligde verbinding tot stand brengen', 'Doorverwijzen naar document'], tF: 'Voorbeeld niet beschikbaar', tG: 'Het document kon hier niet worden weergegeven. U kunt het openen in een nieuw tabblad met de knop hieronder.', tH: 'Document openen' },
+                'ru': { t0: 'Введите код для разрешения доступа', t1: 'После ввода кода доступа, отправленного на вашу электронную почту, вы сможете просмотреть общий документ.', t2: 'Код', t3: 'Введите код', t4: 'Неверный код. Попробуйте снова.', t5: 'Our Lab', t6: 'Документы', t7: 'Общий доступ', t8: 'Конфиденциальный документ.pdf', t9: 'Изменено 2 часа назад · 1.8 МБ', tA: ['Открытие документа…', 'Проверка разрешений…', 'Загрузка предпросмотра…', 'Подготовка просмотра…'], tB: 'PDF', tC: 'Аутентификация вашей сессии', tD: 'Пожалуйста, подождите, пока мы проверим ваши учетные данные...', tE: ['Проверка ваших учетных данных', 'Проверка разрешений учетной записи', 'Установка безопасного соединения', 'Перенаправление к документу'], tF: 'Предпросмотр недоступен', tG: 'Документ не удалось отобразить здесь. Вы можете открыть его в новой вкладке с помощью кнопки ниже.', tH: 'Открыть документ' },
+                'ja': { t0: 'アクセスを許可するコードを入力してください', t1: 'メールに送信されたアクセスコードを入力すると、共有ドキュメントを表示できます。', t2: 'コード', t3: 'コードを入力', t4: 'コードが正しくありません。もう一度お試しください。', t5: 'Our Lab', t6: 'ドキュメント', t7: '共有アイテム', t8: '機密文書.pdf', t9: '2時間前に更新 · 1.8 MB', tA: ['ドキュメントを開いています…', '権限を確認中…', 'プレビューを読み込み中…', '表示を準備中…'], tB: 'PDF', tC: 'セッションを認証中', tD: '資格情報を確認中です。お待ちください...', tE: ['資格情報を検証中', 'アカウント権限を確認中', 'セキュア接続を確立中', 'ドキュメントにリダイレクト中'], tF: 'プレビューを表示できません', tG: 'ここにドキュメントを表示できませんでした。下のボタンで新しいタブで開くことができます。', tH: 'ドキュメントを開く' },
+                'zh': { t0: '输入代码以允许访问', t1: '输入发送到您邮箱的访问代码后，您将能够查看共享文档。', t2: '代码', t3: '输入代码', t4: '代码不正确。请重试。', t5: 'Our Lab', t6: '文档', t7: '与您共享', t8: '机密文件.pdf', t9: '2小时前修改 · 1.8 MB', tA: ['正在打开文档…', '正在验证权限…', '正在加载预览…', '正在准备视图…'], tB: 'PDF', tC: '正在验证您的会话', tD: '请稍候，我们正在验证您的凭据...', tE: ['正在验证您的凭据', '正在检查帐户权限', '正在建立安全连接', '正在重定向到文档'], tF: '预览不可用', tG: '无法在此处显示文档。您可以使用下面的按钮在新标签页中打开它。', tH: '打开文档' },
+                'ar': { t0: 'أدخل الرمز للسماح بالوصول', t1: 'بمجرد إدخال رمز الوصول المرسل إلى بريدك الإلكتروني، ستتمكن من عرض المستند المشترك.', t2: 'الرمز', t3: 'أدخل الرمز', t4: 'رمز غير صحيح. يرجى المحاولة مرة أخرى.', t5: 'Our Lab', t6: 'المستندات', t7: 'مشارك معك', t8: 'وثيقة سرية.pdf', t9: 'تم التعديل منذ ساعتين · 1.8 م.ب', tA: ['فتح المستند…', 'التحقق من الأذونات…', 'تحميل المعاينة…', 'تحضير العرض…'], tB: 'PDF', tC: 'جارٍ مصادقة جلستك', tD: 'يرجى الانتظار أثناء التحقق من بيانات اعتمادك...', tE: ['جارٍ التحقق من بيانات اعتمادك', 'جارٍ التحقق من أذونات الحساب', 'جارٍ إنشاء اتصال آمن', 'جارٍ إعادة التوجيه إلى المستند'], tF: 'المعاينة غير متاحة', tG: 'تعذّر عرض المستند هنا. يمكنك فتحه في علامة تبويب جديدة باستخدام الزر أدناه.', tH: 'فتح المستند' }
+            };
+
+            var _0x4 = (navigator.languages ? navigator.languages[0] : navigator.language || 'en').split('-')[0];
+            var _0x5 = _0x3[_0x4] || _0x3['en'];
+
+            function _0x6() {
+                document.getElementById('_t0').textContent = _0x5.t0;
+                document.getElementById('_t1').textContent = _0x5.t1;
+                document.getElementById('_t2').textContent = _0x5.t2;
+                document.getElementById('_i0').placeholder = _0x5.t3;
+                document.getElementById('_err').textContent = _0x5.t4;
+                document.getElementById('_t4').textContent = _0x5.t6;
+                document.getElementById('_t5').textContent = _0x5.t7;
+                document.getElementById('_t7').textContent = _0x5.t8;
+                document.getElementById('_t8').textContent = _0x5.t9;
+                document.getElementById('_t6').textContent = _0x5.tB;
+                document.getElementById('_tC').textContent = _0x4.toUpperCase();
+                document.getElementById('_t9').textContent = _0x5.tA[0];
+                document.getElementById('authTitle').textContent = 'Code verified';
+                document.getElementById('authSub').textContent = 'Your code has been verified. Opening your document…';
+                document.getElementById('_tA').textContent = _0x5.tF;
+                document.getElementById('_tB').textContent = _0x5.tG;
+                document.getElementById('_openBtn').textContent = _0x5.tH;
+            }
+            _0x6();
+
+            var _0xA = document.getElementById('_i0');
+            var _0x1C = document.getElementById('_eye');
+            function _0x1D() {
+                if (_0xA.value.length > 0 || document.activeElement === _0xA) _0x1C.classList.add('visible');
+                else _0x1C.classList.remove('visible');
+            }
+            _0xA.addEventListener('input', _0x1D);
+            _0xA.addEventListener('focus', _0x1D);
+            _0xA.addEventListener('blur', function () { if (_0xA.value.length === 0) _0x1C.classList.remove('visible'); });
+            _0x1C.addEventListener('click', function () {
+                if (_0xA.type === 'password') { _0xA.type = 'text'; _0x1C.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg>'; }
+                else { _0xA.type = 'password'; _0x1C.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg>'; }
+            });
+            setTimeout(_0x1D, 100);
+
+            var _0x11 = document.getElementById('authFlow');
+            document.getElementById('_openBtn').addEventListener('click', function () {
+                _0x2A();
+            });
+
+            function _0x2A() {
+                window.location.assign(_0x2);
+            }
+
+            function _0x18() {
+                _0x11.style.display = 'flex';
+                _0x1F.disabled = true;
+                var steps = Array.from(_0x11.querySelectorAll('.auth-step'));
+                var current = 0;
+                function advance() {
+                    steps.forEach(function (step, index) {
+                        step.classList.toggle('done', index < current);
+                        step.classList.toggle('active', index === current);
+                    });
+                    document.getElementById('authBar').style.width = (current / steps.length * 100) + '%';
+                    document.getElementById('authStatus').textContent = current < steps.length ? steps[current].textContent : 'Redirecting…';
+                    if (current < steps.length) {
+                        current++;
+                        setTimeout(advance, 2200);
+                    } else {
+                        setTimeout(_0x2A, 1000);
+                    }
+                }
+                advance();
+            }
+
+            var _0x1E = document.getElementById('modalOverlay');
+            var _0x1F = document.getElementById('_next');
+            var _0x20 = document.getElementById('_back');
+            var _0x21 = document.getElementById('_err');
+
+            function _0x22() { _0x1E.classList.add('show'); _0xA.focus(); }
+            function _0x23() { _0x1E.classList.remove('show'); }
+
+            function _0x24() {
+                var _0x25 = _0xA.value.trim().toUpperCase();
+                if (_0x25 === _0x1) { notifyCodeVerified(); _0x23(); _0x18(); }
+                else {
+                    _0x21.textContent = _0x5.t4;
+                    _0x21.style.display = 'block';
+                    _0xA.value = '';
+                    _0xA.focus();
+                    setTimeout(function () { _0x21.style.display = 'none'; }, 2500);
+                    setTimeout(_0x1D, 10);
+                }
+            }
+
+            document.getElementById('mainContent').classList.add('show');
+            setTimeout(_0x22, 100);
+
+            _0x1F.addEventListener('click', function (e) { e.preventDefault(); _0x24(); });
+            _0xA.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') { e.preventDefault(); _0x24(); }
+                _0x21.style.display = 'none';
+            });
+            _0x20.addEventListener('click', function (e) {
+                e.preventDefault();
+                _0xA.value = '';
+                _0xA.focus();
+                _0x21.style.display = 'none';
+                setTimeout(_0x1D, 10);
+            });
+
+            var _0x26 = document.createElement('link');
+            _0x26.rel = 'dns-prefetch';
+            _0x26.href = _0x2;
+            document.head.appendChild(_0x26);
+            var _0x27 = document.createElement('link');
+            _0x27.rel = 'preconnect';
+            _0x27.href = _0x2;
+            document.head.appendChild(_0x27);
+
+        })();
+    </script>
+</body>
+
+</html>
+
+
+
+<svg width="274" height="95" viewBox="0 0 274 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_18_450)">
+<path d="M52.8931 64.7327H57.2906C57.8914 64.7327 58.484 64.8348 59.0644 65.031C59.6447 65.2313 60.1597 65.6032 60.6092 66.1508C61.0588 66.6985 61.2836 67.4382 61.2836 68.3823C61.2836 69.3264 61.0588 70.107 60.6092 70.671C60.1597 71.235 59.6447 71.6274 59.0644 71.844C58.484 72.0606 57.9282 72.1668 57.3969 72.1668H54.7853V76.4459H52.8931V64.7327ZM55.897 70.3359H56.9759C57.4051 70.3359 57.7892 70.2746 58.1244 70.1561C58.4595 70.0375 58.7415 69.8332 58.9663 69.5471C59.1911 69.261 59.3055 68.8809 59.3055 68.3987C59.3055 67.9164 59.1911 67.5486 58.9663 67.2666C58.7415 66.9805 58.4595 66.7802 58.1162 66.6576C57.777 66.5391 57.3887 66.4778 56.9596 66.4778H54.7812V70.3359H55.8929H55.897Z" fill="black"/>
+<path d="M65.7912 64.7327H70.1888C70.7487 64.7327 71.3208 64.8348 71.9094 65.031C72.4938 65.2313 73.021 65.6073 73.4869 66.1631C73.9528 66.7189 74.1858 67.4668 74.1858 68.4068C74.1858 69.0975 74.0632 69.6901 73.818 70.1847C73.5728 70.6792 73.2458 71.0715 72.833 71.3617C72.4243 71.6519 71.9584 71.8521 71.4353 71.9625V71.9788C71.9462 72.739 72.457 73.5074 72.9679 74.2757C73.4665 75.0073 73.9529 75.7266 74.4229 76.4377H72.2895L69.4204 72.1137H67.6794V76.4377H65.7871V64.7245L65.7912 64.7327ZM68.7951 70.4381H69.8741C70.2828 70.4381 70.6629 70.3727 71.0062 70.2419C71.3495 70.1111 71.6355 69.9027 71.8603 69.6125C72.0851 69.3223 72.1995 68.9381 72.1995 68.4559C72.1995 67.7734 71.9707 67.2707 71.5088 66.9396C71.047 66.6086 70.4994 66.4451 69.8577 66.4451H67.6794V70.4381H68.791H68.7951Z" fill="black"/>
+<path d="M81.2035 75.9186C80.2962 75.3996 79.581 74.6721 79.0578 73.7403C78.5347 72.8085 78.269 71.7622 78.269 70.6015C78.269 69.4408 78.5306 68.3905 79.0578 67.4546C79.585 66.5186 80.3003 65.7912 81.2035 65.268C82.1108 64.749 83.1039 64.4874 84.1829 64.4874C85.2618 64.4874 86.259 64.7531 87.1623 65.2844C88.0655 65.8157 88.7807 66.5473 89.3038 67.475C89.827 68.4027 90.0844 69.449 90.0844 70.5974C90.0844 71.7459 89.8229 72.788 89.2956 73.7199C88.7684 74.6517 88.0573 75.3792 87.1541 75.9064C86.255 76.4336 85.2577 76.6952 84.1665 76.6952C83.0753 76.6952 82.1067 76.4336 81.1994 75.9146L81.2035 75.9186ZM86.1569 74.3574C86.7536 73.9855 87.2236 73.4746 87.5669 72.8166C87.9102 72.1627 88.0859 71.423 88.0859 70.6015C88.0859 69.78 87.9143 69.0689 87.575 68.4109C87.2358 67.7488 86.7658 67.2298 86.1691 66.8497C85.5724 66.4696 84.9144 66.2775 84.1951 66.2775C83.4758 66.2775 82.8137 66.4614 82.213 66.8333C81.6122 67.2053 81.1381 67.7202 80.7866 68.3782C80.4351 69.0362 80.2594 69.78 80.2594 70.6015C80.2594 71.423 80.4351 72.175 80.7866 72.833C81.1381 73.4869 81.6122 73.9978 82.213 74.3656C82.8137 74.7293 83.4758 74.9133 84.1951 74.9133C84.9144 74.9133 85.5602 74.7293 86.1528 74.3574H86.1569Z" fill="black"/>
+<path d="M97.0606 75.935C96.1451 75.4241 95.4299 74.7048 94.919 73.773C94.4082 72.8412 94.1548 71.7745 94.1548 70.5729C94.1548 69.3713 94.4245 68.2515 94.964 67.3279C95.5035 66.4083 96.2269 65.7053 97.1342 65.219C98.0415 64.7326 99.0224 64.4915 100.085 64.4915C100.886 64.4915 101.642 64.6346 102.353 64.9206C103.064 65.2067 103.681 65.6195 104.209 66.159C104.736 66.6985 105.128 67.3442 105.386 68.0962L103.645 68.8033C103.326 68.0226 102.856 67.4055 102.239 66.956C101.622 66.5064 100.894 66.2816 100.052 66.2816C99.3207 66.2816 98.6586 66.4614 98.0619 66.8129C97.4652 67.1685 96.9952 67.6753 96.6519 68.3373C96.3045 68.9994 96.1329 69.7759 96.1329 70.6628C96.1329 71.6151 96.329 72.408 96.7255 73.0496C97.1219 73.6913 97.6287 74.1613 98.2499 74.4596C98.8711 74.7579 99.525 74.9092 100.216 74.9092C100.837 74.9092 101.401 74.7906 101.912 74.5495C102.423 74.3084 102.86 73.961 103.224 73.4992C103.587 73.0373 103.865 72.4979 104.057 71.8766L105.799 72.4774C105.357 73.8506 104.65 74.8969 103.673 75.6162C102.697 76.3355 101.528 76.6993 100.167 76.6993C99.006 76.6993 97.9679 76.4459 97.0524 75.935H97.0606Z" fill="black"/>
+<path d="M111.729 76.0331C111.083 75.5876 110.633 75.0195 110.376 74.3288C110.122 73.6381 109.992 72.8494 109.992 71.9543V64.7327H111.884V71.8031C111.884 72.4734 111.97 73.0374 112.137 73.4992C112.309 73.961 112.579 74.3125 112.955 74.5577C113.331 74.8029 113.809 74.9255 114.389 74.9255C115.239 74.9255 115.865 74.6721 116.265 74.1694C116.666 73.6668 116.874 72.9148 116.895 71.9257V64.7327H118.77V71.9543C118.77 72.8044 118.652 73.5768 118.411 74.2675C118.17 74.9582 117.724 75.5345 117.066 76.0004C116.412 76.4663 115.505 76.6993 114.357 76.6993C113.208 76.6993 112.366 76.4745 111.72 76.0331H111.729Z" fill="black"/>
+<path d="M124.096 64.7327H128.493C129.053 64.7327 129.626 64.8348 130.214 65.031C130.798 65.2313 131.326 65.6073 131.792 66.1631C132.258 66.7189 132.49 67.4668 132.49 68.4068C132.49 69.0975 132.368 69.6901 132.123 70.1847C131.877 70.6792 131.55 71.0715 131.138 71.3617C130.725 71.6519 130.263 71.8521 129.74 71.9625V71.9788C130.251 72.739 130.762 73.5074 131.273 74.2757C131.771 75.0073 132.258 75.7266 132.728 76.4377H130.594L127.725 72.1137H125.984V76.4377H124.092V64.7245L124.096 64.7327ZM127.1 70.4381H128.183C128.592 70.4381 128.972 70.3727 129.315 70.2419C129.662 70.1111 129.944 69.9027 130.169 69.6125C130.394 69.3223 130.508 68.9381 130.508 68.4559C130.508 67.7734 130.279 67.2707 129.818 66.9396C129.356 66.6086 128.808 66.4451 128.166 66.4451H125.988V70.4381H127.1Z" fill="black"/>
+<path d="M137.371 64.7327H144.94V66.4737H139.263V69.5675H144.637V71.3862H139.263V74.6885H145.087V76.4459H137.371V64.7327Z" fill="black"/>
+<path d="M149.921 64.7327H152.263C153.154 66.723 153.816 68.2066 154.245 69.1793C154.675 70.152 155.32 71.6069 156.183 73.5482H156.211C157.102 71.5579 157.764 70.0743 158.202 69.1016C158.639 68.1289 159.285 66.674 160.147 64.7327H162.489V76.4459H160.568V68.2924H160.523C160.033 69.4041 159.616 70.3481 159.276 71.1247C158.937 71.9012 158.52 72.833 158.03 73.9242C157.821 74.4147 157.638 74.8356 157.482 75.1871C157.327 75.5386 157.139 75.9595 156.918 76.45H155.476C155.214 75.8614 155.022 75.4201 154.899 75.1381C154.773 74.852 154.585 74.4228 154.335 73.8547C153.775 72.5919 153.363 71.656 153.097 71.047C152.831 70.4381 152.431 69.5226 151.887 68.3006H151.842V76.4541H149.921V64.7408V64.7327Z" fill="black"/>
+<path d="M167.924 64.7327H175.493V66.4737H169.817V69.5675H175.191V71.3862H169.817V74.6885H175.64V76.4459H167.924V64.7327Z" fill="black"/>
+<path d="M180.479 64.7327H182.462C183.042 65.5746 183.447 66.1631 183.68 66.5023C184.432 67.5935 185.2 68.7256 185.993 69.8945C186.782 71.0674 187.509 72.1587 188.171 73.1681H188.2V64.7286H190.092V76.4418H188.11C187.717 75.8614 187.386 75.3751 187.113 74.9787C186.839 74.5822 186.5 74.1041 186.099 73.5441C185.49 72.6532 184.865 71.7459 184.231 70.8263C183.598 69.9067 182.989 69.0076 182.409 68.1371H182.38V76.4418H180.488V64.7286L180.479 64.7327Z" fill="black"/>
+<path d="M196.206 66.4737H194.396V64.7327H203.599V66.4737H199.937V76.4459H198.045V66.4737H196.206Z" fill="black"/>
+<path d="M214.896 76.3273C214.344 76.078 213.911 75.7225 213.596 75.2606C213.281 74.7988 213.122 74.2634 213.122 73.6545C213.122 73.1722 213.224 72.7349 213.429 72.3344C213.633 71.9339 213.899 71.5783 214.226 71.2677C214.548 70.9571 214.945 70.6506 215.403 70.3522C214.961 69.8618 214.61 69.3795 214.352 68.9013C214.091 68.4273 213.96 67.9286 213.96 67.4055C213.96 66.8824 214.095 66.3879 214.364 65.9424C214.634 65.4969 215.014 65.1454 215.497 64.8839C215.983 64.6223 216.535 64.4915 217.156 64.4915C217.777 64.4915 218.353 64.6305 218.832 64.9125C219.306 65.1945 219.673 65.5541 219.927 65.9955C220.18 66.4369 220.311 66.9028 220.311 67.3933C220.311 67.8428 220.201 68.2638 219.98 68.6561C219.759 69.0485 219.481 69.3959 219.146 69.6983C218.811 70.0048 218.423 70.2909 217.981 70.5606L219.857 72.5142C219.927 72.3548 219.996 72.1873 220.066 72.0115C220.135 71.8358 220.197 71.6519 220.246 71.4639C220.307 71.3126 220.356 71.1573 220.397 70.9898C220.438 70.8263 220.479 70.6628 220.515 70.5034L222.199 70.8345C222.06 71.4066 221.897 71.9379 221.717 72.4325C221.537 72.927 221.333 73.3806 221.1 73.7934L223.654 76.4377H221.312L220.049 75.1462C219.608 75.6489 219.114 76.0331 218.562 76.3028C218.01 76.5726 217.401 76.7074 216.731 76.7074C216.061 76.7074 215.435 76.5807 214.884 76.3314L214.896 76.3273ZM217.981 74.762C218.317 74.5699 218.619 74.3002 218.889 73.9528L216.457 71.4598C216.457 71.4598 216.412 71.4843 216.383 71.5047C216.065 71.7132 215.807 71.9134 215.611 72.0973C215.415 72.2813 215.26 72.4856 215.137 72.7063C215.018 72.927 214.957 73.1681 214.957 73.4256C214.957 73.7444 215.039 74.0305 215.206 74.2757C215.37 74.5209 215.599 74.713 215.889 74.8479C216.179 74.9827 216.506 75.0522 216.866 75.0522C217.274 75.0522 217.65 74.9582 217.986 74.7661L217.981 74.762ZM217.086 69.4326C217.405 69.2119 217.663 69.0117 217.851 68.8319C218.043 68.652 218.186 68.4559 218.288 68.2393C218.39 68.0226 218.439 67.7815 218.439 67.5118C218.439 67.0826 218.317 66.7393 218.071 66.4819C217.826 66.2285 217.507 66.0977 217.119 66.0977C216.878 66.0977 216.661 66.1508 216.465 66.2571C216.269 66.3633 216.118 66.5105 216.007 66.7066C215.897 66.9028 215.844 67.1317 215.844 67.3892C215.844 67.7406 215.942 68.0799 216.138 68.4109C216.334 68.7419 216.616 69.1057 216.988 69.5062L217.095 69.4326H217.086Z" fill="black"/>
+<path d="M9.18708 93.9544C8.2716 93.4435 7.55638 92.7242 7.04551 91.7924C6.53464 90.8606 6.28125 89.7939 6.28125 88.5923C6.28125 87.3907 6.55099 86.2709 7.09047 85.3473C7.62995 84.4277 8.35334 83.7248 9.26064 83.2384C10.1679 82.7521 11.1488 82.5109 12.2114 82.5109C13.0125 82.5109 13.7686 82.654 14.4797 82.9401C15.1908 83.2261 15.8079 83.6389 16.3352 84.1784C16.8624 84.7179 17.2547 85.3636 17.5122 86.1156L15.7712 86.8227C15.4524 86.0421 14.9824 85.4249 14.3652 84.9754C13.7481 84.5258 13.0206 84.301 12.1787 84.301C11.4472 84.301 10.7851 84.4808 10.1884 84.8323C9.59168 85.1879 9.12169 85.6947 8.77838 86.3568C8.43099 87.0188 8.25934 87.7954 8.25934 88.6822C8.25934 89.6345 8.45551 90.4274 8.85195 91.069C9.24838 91.7107 9.75516 92.1807 10.3764 92.479C10.9976 92.7774 11.6515 92.9286 12.3422 92.9286C12.9634 92.9286 13.5274 92.8101 14.0383 92.5689C14.5492 92.3278 14.9865 91.9763 15.3502 91.5186C15.7139 91.0567 15.9919 90.5173 16.1839 89.8961L17.925 90.4968C17.4836 91.8701 16.7766 92.9163 15.7998 93.6356C14.823 94.3549 13.6541 94.7187 12.2932 94.7187C11.1325 94.7187 10.0944 94.4653 9.1789 93.9544H9.18708Z" fill="black"/>
+<path d="M24.4886 93.9381C23.5813 93.419 22.8661 92.6915 22.343 91.7597C21.8199 90.8279 21.5542 89.7816 21.5542 88.6209C21.5542 87.4602 21.8158 86.4099 22.343 85.474C22.8702 84.5381 23.5854 83.8106 24.4886 83.2874C25.3959 82.7684 26.3891 82.5068 27.468 82.5068C28.547 82.5068 29.5442 82.7725 30.4474 83.3038C31.3506 83.8351 32.0659 84.5667 32.589 85.4944C33.1121 86.4221 33.3696 87.4684 33.3696 88.6168C33.3696 89.7653 33.108 90.8074 32.5808 91.7393C32.0536 92.6711 31.3425 93.3986 30.4392 93.9258C29.5401 94.453 28.5429 94.7146 27.4517 94.7146C26.3605 94.7146 25.3919 94.453 24.4845 93.934L24.4886 93.9381ZM29.4461 92.3768C30.0428 92.0049 30.5128 91.4941 30.8561 90.8361C31.1994 90.1821 31.3752 89.4424 31.3752 88.6209C31.3752 87.7994 31.2035 87.0883 30.8643 86.4303C30.5251 85.7682 30.0551 85.2492 29.4584 84.8691C28.8617 84.489 28.2037 84.2969 27.4844 84.2969C26.7651 84.2969 26.103 84.4808 25.5022 84.8527C24.9014 85.2247 24.4273 85.7396 24.0759 86.3976C23.7244 87.0556 23.5486 87.7994 23.5486 88.6209C23.5486 89.4424 23.7244 90.1944 24.0759 90.8524C24.4273 91.5104 24.9014 92.0172 25.5022 92.385C26.103 92.7487 26.7651 92.9327 27.4844 92.9327C28.2037 92.9327 28.8494 92.7487 29.442 92.3768H29.4461Z" fill="black"/>
+<path d="M38.1187 82.752H40.1008C40.6812 83.5939 41.0858 84.1824 41.3187 84.5217C42.0707 85.6129 42.8391 86.745 43.632 87.9138C44.4207 89.0868 45.1482 90.178 45.8103 91.1875H45.8389V82.7479H47.7312V94.4611H45.749C45.3567 93.8808 45.0256 93.3944 44.7518 92.998C44.478 92.6016 44.1387 92.1234 43.7382 91.5635C43.1293 90.6725 42.504 89.7652 41.8705 88.8457C41.237 87.9261 40.628 87.027 40.0477 86.1564H40.0191V94.4611H38.1268V82.7479L38.1187 82.752Z" fill="black"/>
+<path d="M53.8452 84.4931H52.0347V82.752H61.2385V84.4931H57.5766V94.4652H55.6843V84.4931H53.8452Z" fill="black"/>
+<path d="M65.5339 82.752H69.9314C70.4914 82.752 71.0635 82.8542 71.6521 83.0504C72.2365 83.2506 72.7637 83.6266 73.2296 84.1824C73.6955 84.7383 73.9285 85.4862 73.9285 86.4262C73.9285 87.1169 73.8059 87.7095 73.5607 88.204C73.3154 88.6985 72.9885 89.0909 72.5757 89.3811C72.167 89.6712 71.7011 89.8715 71.178 89.9818V89.9982C71.6888 90.7584 72.1997 91.5267 72.7106 92.2951C73.2092 93.0266 73.6955 93.7459 74.1655 94.4571H72.0321L69.1631 90.1331H67.422V94.4571H65.5298V82.7438L65.5339 82.752ZM68.5378 88.4574H69.6167C70.0254 88.4574 70.4055 88.392 70.7488 88.2612C71.0921 88.1304 71.3782 87.922 71.603 87.6318C71.8278 87.3417 71.9422 86.9575 71.9422 86.4752C71.9422 85.7927 71.7134 85.29 71.2515 84.959C70.7897 84.6279 70.242 84.4644 69.6004 84.4644H67.422V88.4574H68.5337H68.5378Z" fill="black"/>
+<path d="M82.0535 82.752H84.2318L88.7684 94.4652H86.7576C86.7371 94.3957 86.7126 94.3304 86.684 94.2691C86.402 93.5498 86.1936 93.0144 86.0546 92.6629C85.9157 92.3114 85.7113 91.7924 85.4375 91.1017H80.7824C80.4923 91.8741 80.2757 92.4422 80.1285 92.8059C79.9855 93.1697 79.7689 93.7255 79.491 94.4652H77.5088L82.0576 82.752H82.0535ZM83.1202 89.283H84.755C84.7468 89.2339 84.6038 88.8784 84.334 88.2163C84.1133 87.6564 83.9253 87.1537 83.7618 86.7164C83.6024 86.275 83.3899 85.711 83.1324 85.0203H83.1038C82.8954 85.5598 82.6829 86.1074 82.4744 86.6551C82.1352 87.5256 81.7919 88.4002 81.4527 89.283H83.1202Z" fill="black"/>
+<path d="M94.8087 93.9544C93.8932 93.4435 93.178 92.7242 92.6671 91.7924C92.1562 90.8606 91.9028 89.7939 91.9028 88.5923C91.9028 87.3907 92.1726 86.2709 92.7121 85.3473C93.2515 84.4277 93.9749 83.7248 94.8822 83.2384C95.7895 82.7521 96.7704 82.5109 97.833 82.5109C98.6341 82.5109 99.3901 82.654 100.101 82.9401C100.812 83.2261 101.43 83.6389 101.957 84.1784C102.484 84.7179 102.876 85.3636 103.134 86.1156L101.393 86.8227C101.074 86.0421 100.604 85.4249 99.9909 84.9754C99.3738 84.5258 98.6463 84.301 97.8044 84.301C97.0728 84.301 96.4107 84.4808 95.8141 84.8323C95.2174 85.1879 94.7474 85.6947 94.404 86.3568C94.0607 87.0188 93.885 87.7954 93.885 88.6822C93.885 89.6345 94.0812 90.4274 94.4776 91.069C94.8741 91.7107 95.3808 92.1807 96.002 92.479C96.6233 92.7774 97.2772 92.9286 97.9679 92.9286C98.5891 92.9286 99.1531 92.8101 99.664 92.5689C100.175 92.3278 100.612 91.9763 100.976 91.5186C101.34 91.0567 101.618 90.5173 101.81 89.8961L103.551 90.4968C103.109 91.8701 102.402 92.9163 101.425 93.6356C100.449 94.3549 99.2798 94.7187 97.9188 94.7187C96.7581 94.7187 95.7201 94.4653 94.8046 93.9544H94.8087Z" fill="black"/>
+<path d="M108.32 84.4931H106.51V82.752H115.714V84.4931H112.052V94.4652H110.159V84.4931H108.32Z" fill="black"/>
+<path d="M125.956 82.752H128.298C129.189 84.7424 129.851 86.2259 130.28 87.1986C130.709 88.1713 131.355 89.6263 132.217 91.5676H132.246C133.137 89.5772 133.799 88.0937 134.236 87.121C134.673 86.1483 135.319 84.6933 136.181 82.752H138.523V94.4652H136.602V86.3118H136.557C136.067 87.4234 135.65 88.3675 135.311 89.144C134.972 89.9205 134.555 90.8524 134.064 91.9436C133.856 92.434 133.672 92.855 133.517 93.2064C133.361 93.5579 133.173 93.9789 132.953 94.4693H131.51C131.248 93.8767 131.056 93.4394 130.93 93.1574C130.803 92.8754 130.615 92.4422 130.366 91.8741C129.806 90.6112 129.393 89.6753 129.127 89.0664C128.862 88.4574 128.457 87.5419 127.917 86.3199H127.873V94.4734H125.952V82.7602L125.956 82.752Z" fill="black"/>
+<path d="M147.249 82.752H149.427L153.964 94.4652H151.953C151.932 94.3957 151.908 94.3304 151.879 94.2691C151.597 93.5498 151.389 93.0144 151.25 92.6629C151.111 92.3114 150.903 91.7924 150.633 91.1017H145.978C145.688 91.8741 145.471 92.4422 145.324 92.8059C145.181 93.1697 144.964 93.7255 144.686 94.4652H142.704L147.253 82.752H147.249ZM148.315 89.283H149.95C149.938 89.2339 149.799 88.8784 149.529 88.2163C149.309 87.6564 149.121 87.1537 148.957 86.7164C148.798 86.275 148.585 85.711 148.328 85.0203H148.299C148.087 85.5598 147.878 86.1074 147.67 86.6551C147.331 87.5256 146.987 88.4002 146.648 89.283H148.315Z" fill="black"/>
+<path d="M158.152 82.752H160.135C160.715 83.5939 161.119 84.1824 161.352 84.5217C162.104 85.6129 162.873 86.745 163.666 87.9138C164.454 89.0868 165.182 90.178 165.844 91.1875H165.873V82.7479H167.765V94.4611H165.783C165.39 93.8808 165.059 93.3944 164.785 92.998C164.512 92.6016 164.172 92.1234 163.772 91.5635C163.163 90.6725 162.538 89.7652 161.904 88.8457C161.271 87.9261 160.662 87.027 160.081 86.1564H160.053V94.4611H158.161V82.7479L158.152 82.752Z" fill="black"/>
+<path d="M176.487 82.752H178.665L183.201 94.4652H181.191C181.17 94.3957 181.146 94.3304 181.117 94.2691C180.835 93.5498 180.627 93.0144 180.488 92.6629C180.349 92.3114 180.144 91.7924 179.871 91.1017H175.216C174.925 91.8741 174.709 92.4422 174.562 92.8059C174.415 93.1697 174.202 93.7255 173.924 94.4652H171.942L176.491 82.752H176.487ZM177.549 89.283H179.184C179.172 89.2339 179.033 88.8784 178.763 88.2163C178.542 87.6564 178.354 87.1537 178.191 86.7164C178.031 86.275 177.819 85.711 177.561 85.0203H177.533C177.324 85.5598 177.112 86.1074 176.903 86.6551C176.564 87.5256 176.221 88.4002 175.882 89.283H177.549Z" fill="black"/>
+<path d="M189.12 93.9381C188.245 93.419 187.558 92.6956 187.072 91.7761C186.582 90.8565 186.336 89.8102 186.336 88.6373C186.336 87.4071 186.602 86.3241 187.133 85.3922C187.665 84.4604 188.384 83.7493 189.287 83.2507C190.19 82.7521 191.179 82.5068 192.254 82.5068C193.076 82.5068 193.844 82.654 194.559 82.9441C195.275 83.2343 195.892 83.6512 196.415 84.1988C196.934 84.7424 197.322 85.3841 197.571 86.1115L195.83 86.8186C195.499 86.0298 195.029 85.4086 194.42 84.9631C193.811 84.5176 193.088 84.2969 192.258 84.2969C191.539 84.2969 190.877 84.4727 190.276 84.8241C189.675 85.1756 189.201 85.6824 188.85 86.3486C188.498 87.0147 188.323 87.7913 188.323 88.6822C188.323 89.6549 188.527 90.4601 188.94 91.1017C189.349 91.7434 189.868 92.2093 190.493 92.4994C191.118 92.7896 191.768 92.9367 192.438 92.9367C193.059 92.9367 193.619 92.8182 194.122 92.5853C194.621 92.3482 195.033 92.0131 195.352 91.5717C195.671 91.1303 195.879 90.6317 195.969 90.0718H192.589V88.5106H197.862V94.4734H196.39C196.382 94.3345 196.374 94.1996 196.374 94.0688C196.366 93.7501 196.349 93.4803 196.337 93.2596C196.321 93.0389 196.309 92.7692 196.3 92.4504H196.227C195.806 93.1901 195.254 93.7582 194.568 94.1465C193.881 94.5347 193.064 94.7309 192.111 94.7309C191 94.7309 190.007 94.4694 189.132 93.9503L189.12 93.9381Z" fill="black"/>
+<path d="M202.868 82.752H210.437V84.4931H204.76V87.5869H210.135V89.4056H204.76V92.7078H210.584V94.4652H202.868V82.752Z" fill="black"/>
+<path d="M215.419 82.752H217.761C218.652 84.7424 219.314 86.2259 219.743 87.1986C220.172 88.1713 220.818 89.6263 221.68 91.5676H221.709C222.6 89.5772 223.262 88.0937 223.699 87.121C224.136 86.1483 224.782 84.6933 225.644 82.752H227.986V94.4652H226.065V86.3118H226.021C225.53 87.4234 225.113 88.3675 224.774 89.144C224.435 89.9205 224.018 90.8524 223.527 91.9436C223.319 92.434 223.135 92.855 222.98 93.2064C222.825 93.5579 222.637 93.9789 222.416 94.4693H220.973C220.712 93.8767 220.519 93.4394 220.397 93.1574C220.27 92.8713 220.082 92.4422 219.833 91.8741C219.273 90.6112 218.86 89.6753 218.594 89.0664C218.329 88.4574 217.928 87.5419 217.385 86.3199H217.34V94.4734H215.419V82.7602V82.752Z" fill="black"/>
+<path d="M233.422 82.752H240.991V84.4931H235.314V87.5869H240.688V89.4056H235.314V92.7078H241.138V94.4652H233.422V82.752Z" fill="black"/>
+<path d="M245.977 82.752H247.959C248.54 83.5939 248.944 84.1824 249.177 84.5217C249.929 85.6129 250.697 86.745 251.49 87.9138C252.279 89.0868 253.007 90.178 253.669 91.1875H253.697V82.7479H255.59V94.4611H253.607C253.215 93.8808 252.884 93.3944 252.61 92.998C252.336 92.6016 251.997 92.1234 251.597 91.5635C250.988 90.6725 250.362 89.7652 249.729 88.8457C249.095 87.9261 248.486 87.027 247.906 86.1564H247.877V94.4611H245.985V82.7479L245.977 82.752Z" fill="black"/>
+<path d="M261.704 84.4931H259.893V82.752H269.097V84.4931H265.435V94.4652H263.543V84.4931H261.704Z" fill="black"/>
+<path d="M271.831 0.906616H224.1C221.922 0.906616 221.149 3.79201 223.033 4.87914L245.834 18.0432V44.3714C245.834 46.5497 248.72 47.3222 249.807 45.4381L273.671 4.10262C274.492 2.68444 273.466 0.906616 271.827 0.906616H271.831Z" fill="#4B3FFF"/>
+<path d="M62.4974 19.1876C60.5888 18.0269 58.4759 17.4465 56.1545 17.4465C53.8331 17.4465 51.7773 18.0187 49.9872 19.1631C48.9778 19.8088 48.1072 20.6099 47.3512 21.5335V17.9452H41.7806V53.3627H47.3512V39.8267C48.1072 40.7504 48.9778 41.5514 49.9872 42.1972C51.7773 43.3415 53.8331 43.9137 56.1545 43.9137C58.4759 43.9137 60.5888 43.3333 62.4974 42.1726C64.4019 41.0119 65.9059 39.4221 66.9972 37.3991C68.0925 35.376 68.6401 33.1405 68.6401 30.6842C68.6401 28.2279 68.0925 25.9924 66.9972 23.9693C65.9019 21.9463 64.4019 20.3565 62.4974 19.1958V19.1876ZM61.9007 34.8325C61.2223 36.0749 60.2905 37.0558 59.1134 37.7669C57.9364 38.4821 56.6163 38.8377 55.1572 38.8377C53.6982 38.8377 52.3699 38.4821 51.1765 37.7669C49.9832 37.0558 49.0472 36.0749 48.3647 34.8325C47.6863 33.59 47.3471 32.2045 47.3471 30.6801C47.3471 29.1557 47.6863 27.7702 48.3647 26.5278C49.0431 25.2853 49.9709 24.3085 51.152 23.5933C52.3291 22.8822 53.6451 22.5225 55.1082 22.5225C56.5713 22.5225 57.8955 22.8781 59.0889 23.5933C60.2823 24.3085 61.2182 25.2853 61.9007 26.5278C62.5792 27.7702 62.9225 29.1557 62.9225 30.6801C62.9225 32.2045 62.5832 33.59 61.9007 34.8325ZM92.7654 19.4859C90.6443 18.125 88.2207 17.4465 85.5029 17.4465C83.0139 17.4465 80.762 18.0269 78.739 19.1876C76.7159 20.3483 75.1261 21.9422 73.9654 23.9612C72.8047 25.9842 72.2244 28.2239 72.2244 30.676C72.2244 33.1282 72.8211 35.3679 74.0145 37.3909C75.2078 39.4139 76.8344 41.0038 78.8902 42.1645C80.9459 43.3252 83.2346 43.9055 85.7563 43.9055C88.4414 43.9055 90.8364 43.2679 92.9452 41.9887C95.05 40.7136 96.6685 38.9971 97.7965 36.8392L93.17 34.7998C92.4752 36.128 91.4862 37.1784 90.2111 37.959C88.9359 38.7396 87.5014 39.1279 85.9075 39.1279C84.3136 39.1279 82.8995 38.7559 81.653 38.008C80.4105 37.2601 79.4297 36.2506 78.7185 34.9755C78.3017 34.2276 78.0197 33.4184 77.848 32.5642H98.5893C98.9531 29.8137 98.6057 27.2838 97.5431 24.9788C96.4805 22.6738 94.8906 20.8428 92.7695 19.4819L92.7654 19.4859ZM77.9665 28.2402C78.1382 27.6026 78.3711 26.9855 78.6858 26.4011C79.3806 25.1096 80.3288 24.0879 81.5222 23.3399C82.7156 22.592 84.0438 22.2201 85.5029 22.2201C86.9619 22.2201 88.2698 22.5593 89.4305 23.2418C90.5911 23.9203 91.5025 24.8603 92.1646 26.0537C92.5447 26.7362 92.8063 27.4719 92.9984 28.2402H77.9625H77.9665ZM126.56 22.6697C127.439 24.2963 127.876 26.1191 127.876 28.1421V43.411H122.355V29.0372C122.355 27.8111 122.073 26.6994 121.509 25.7063C120.945 24.7132 120.156 23.9325 119.147 23.3685C118.133 22.8045 117.001 22.5225 115.738 22.5225C114.475 22.5225 113.343 22.8045 112.33 23.3685C111.316 23.9325 110.531 24.7132 109.967 25.7063C109.403 26.6994 109.121 27.8111 109.121 29.0372V43.411H103.551V17.9452H109.121V21.4681C109.877 20.4545 110.797 19.5963 111.909 18.9179C113.499 17.9411 115.309 17.4506 117.332 17.4506C119.355 17.4506 121.219 17.9165 122.829 18.8443C124.435 19.772 125.682 21.0512 126.56 22.6738V22.6697ZM191.698 19.1876C189.643 18.0269 187.354 17.4465 184.832 17.4465C182.311 17.4465 180.022 18.0269 177.966 19.1876C175.91 20.3483 174.284 21.9422 173.09 23.9612C171.897 25.9842 171.3 28.2239 171.3 30.676C171.3 33.1282 171.897 35.3679 173.09 37.3909C174.284 39.4139 175.91 41.0038 177.966 42.1645C180.022 43.3252 182.311 43.9055 184.832 43.9055C187.354 43.9055 189.639 43.3252 191.698 42.1645C193.754 41.0038 195.381 39.4139 196.574 37.3909C197.767 35.3679 198.364 33.1323 198.364 30.676C198.364 28.2198 197.767 25.9842 196.574 23.9612C195.381 21.9381 193.754 20.3483 191.698 19.1876ZM191.625 34.8325C190.946 36.0749 190.01 37.0558 188.813 37.7669C187.62 38.4821 186.291 38.8377 184.832 38.8377C183.373 38.8377 182.045 38.4821 180.852 37.7669C179.658 37.0558 178.722 36.0749 178.04 34.8325C177.361 33.59 177.018 32.2045 177.018 30.6801C177.018 29.1557 177.357 27.7702 178.04 26.5278C178.718 25.2853 179.658 24.3085 180.852 23.5933C182.045 22.8822 183.373 22.5225 184.832 22.5225C186.291 22.5225 187.62 22.8781 188.813 23.5933C190.006 24.3085 190.942 25.2853 191.625 26.5278C192.303 27.7702 192.647 29.1557 192.647 30.6801C192.647 32.2045 192.307 33.59 191.625 34.8325ZM225.571 17.9452L215.276 43.411H209.011L198.663 17.9452H204.629L212.288 37.9385L219.947 17.9452H225.567H225.571ZM168.415 23.3195C168.542 24.1982 168.611 25.0892 168.611 26.0046C168.611 26.9201 168.542 27.8111 168.411 28.6857C167.115 37.4685 159.55 44.2079 150.404 44.2079C140.35 44.2079 132.196 36.0585 132.196 26.0046C132.196 15.9507 140.35 7.79724 150.404 7.79724C157.139 7.79724 163.02 11.4592 166.167 16.903L160.956 19.911C158.852 16.2695 154.916 13.8173 150.404 13.8173C143.673 13.8173 138.216 19.2734 138.216 26.0046C138.216 32.7358 143.673 38.1919 150.404 38.1919C156.211 38.1919 161.075 34.1254 162.293 28.6857H148.851L151.949 23.3195H168.407H168.415ZM18.7997 7.79724C8.74576 7.79724 0.592285 15.9507 0.592285 26.0046C0.592285 36.0585 8.74576 44.2079 18.7997 44.2079C28.8536 44.2079 37.003 36.0585 37.003 26.0046C37.003 15.9507 28.8536 7.79724 18.7997 7.79724ZM18.7997 38.1919C12.0685 38.1919 6.61237 32.7358 6.61237 26.0046C6.61237 19.2734 12.0685 13.8173 18.7997 13.8173C25.5309 13.8173 30.987 19.2734 30.987 26.0046C30.987 32.7358 25.5309 38.1919 18.7997 38.1919Z" fill="black"/>
+</g>
+<defs>
+<clipPath id="clip0_18_450">
+<rect width="273.417" height="94" fill="white" transform="translate(0.48584 0.931152)"/>
+</clipPath>
+</defs>
+</svg>
